@@ -43,8 +43,6 @@ exports.obtenerDetails = async (req, res) => {
     res.status(500).send('Hubo un error');
   }
 };
-
-
 exports.agregarAlCarrito = async (req, res) => {
   try {
     const productId = req.params.id; // Obtén el ID del producto a agregar al carrito
@@ -112,84 +110,44 @@ exports.eliminarProducto = async (req, res) => {
   }
 };
 
-// Controlador para actualizar un producto por su ID
+
+
+// Metodo de actualizar producto
 exports.actualizarProducto = async (req, res) => {
   try {
     const { id } = req.params;
-    const productoExistente = await Producto.findById(id);
+    const producto = await Producto.findById(id);
 
-    if (!productoExistente) {
+    if (!producto) {
       return res.status(404).json({ msg: 'El producto no existe' });
     }
 
-    // Crear un nuevo objeto con los datos actualizados
-    const productoActualizado = {
-      nombre: req.body.nombre || productoExistente.nombre,
-      precio: req.body.precio || productoExistente.precio,
-      detalles: req.body.detalles || productoExistente.detalles,
-      categoria: req.body.categoria || productoExistente.categoria,
-      // talla: req.body.talla || productoExistente.talla, // Campo talla si es necesario
-    };
+    // Actualizar los campos del producto con los datos recibidos en el cuerpo de la solicitud
+    producto.nombre = req.body.nombre || producto.nombre;
+    producto.precio = req.body.precio || producto.precio;
+    producto.detalles = req.body.detalles || producto.detalles;
+    producto.categoria = req.body.categoria || producto.categoria;
+    // producto.talla = req.body.talla || producto.talla;
 
-    // Manejar la actualización de la imagen si se proporciona una nueva
-    if (req.file?.path) {
-      const rutaImagen = `http://localhost:4000/upload/${req.file.filename}`;
-      productoActualizado.imagen = rutaImagen;
-    } else {
-      productoActualizado.imagen = productoExistente.imagen;
-    }
-
-    // Actualizar el producto en la base de datos
-    const productoActualizadoDB = await Producto.findByIdAndUpdate(
-      id,
-      productoActualizado,
-      { new: true }
-    );
-
-    res.json(productoActualizadoDB);
+    const productoActualizado = await producto.save();
+    res.json(productoActualizado);
   } catch (error) {
     console.log(error);
     res.status(500).send('Hubo un error');
   }
-};
+  exports.obtenerProductos = async (req, res) => {
 
+    try {
 
-// Metodo de actualizar producto
-// exports.actualizarProducto = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const producto = await Producto.findById(id);
-
-//     if (!producto) {
-//       return res.status(404).json({ msg: 'El producto no existe' });
-//     }
-
-//     // Actualizar los campos del producto con los datos recibidos en el cuerpo de la solicitud
-//     producto.nombre = req.body.nombre || producto.nombre;
-//     producto.precio = req.body.precio || producto.precio;
-//     producto.detalles = req.body.detalles || producto.detalles;
-//     producto.categoria = req.body.categoria || producto.categoria;
-//     // producto.talla = req.body.talla || producto.talla;
-
-//     const productoActualizado = await producto.save();
-//     res.json(productoActualizado);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send('Hubo un error');
-//   }
-//   exports.obtenerProductos = async (req, res) => {
-
-//     try {
-
-//         const productos = await Producto.find();
-//         res.json(productos)
+        const productos = await Producto.find();
+        res.json(productos)
         
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).send('Hubo un error');
-//     }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Hubo un error');
+    }
 
-// }
+}
 
 
 exports.deleteProducto = async (req, res) => {
@@ -208,4 +166,5 @@ exports.deleteProducto = async (req, res) => {
         console.log(error);
         res.status(500).send('Hubo un error');
     }
-  };
+  }
+};
