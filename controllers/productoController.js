@@ -82,7 +82,7 @@ exports.registrarProducto = async (req, res) => {
     
     const imagen = req.file;
     console.info(imagen)
-    const rutaImagen = `http://localhost:4000/upload/${req.file.filename}`;
+    const rutaImagen = 'http://localhost:4000/upload/${req.file.filename}';
     const nuevoProducto = new Producto({ nombre, precio, detalles, categoria, imagen: rutaImagen });
     await nuevoProducto.save();
   
