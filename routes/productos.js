@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productoController')
 const Producto = require("../models/Producto");
-// const multer  = require('multer');
-// const upload = multer({ dest: 'upload/'});
-// const type = upload.single('rectfile')
+
 
 // Ruta para obtener productos
 router.get('/', productController.obtenerProductos);
@@ -24,20 +22,17 @@ router.get('/:id', async (req, res) => {
     res.status(500).send('Hubo un error');
   }
 });
+
 // Ruta para agregar un producto al carrito
 router.post('/:id', productController.agregarAlCarrito);
 
 // Ruta para registrar un nuevo producto
 router.post('/', productController.registrarProducto);
 
-// Ruta para editar un producto
-router.put('/:id', productController.registrarProducto);
+
 
 // Ruta para eliminar un producto por su ID
 router.delete('/:id', productController.eliminarProducto);
-
-//Ruta para actualizar un producto por su ID
-router.put('/:id', productController.actualizarProducto);
 
 
 module.exports = router;
